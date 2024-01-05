@@ -1,0 +1,81 @@
+<meta charset="UTF-8" />
+<canvas width="600" height="400"> </canvas>
+
+<script>
+  alert('warm up first to get the reward later')
+
+  var pantalla = document.querySelector('canvas')
+  var pincel = pantalla.getContext('2d')
+  pincel.fillStyle = 'lightgrey'
+  pincel.fillRect(0, 0, 600, 400)
+
+  var radio = 10
+  var xAleatorio
+  var yAleatorio
+
+  function disenharCircunferencia(x, y, radio, color) {
+    pincel.fillStyle = color
+    pincel.beginPath()
+    pincel.arc(x, y, radio, 0, 2 * Math.PI)
+    pincel.fill()
+  }
+
+  function limpiarPantalla() {
+    pincel.clearRect(0, 0, 600, 400)
+  }
+
+  var x = 0
+
+  function disenharCuadradoPixel(x, y, tamano, color) {
+    pincel.fillStyle = color
+    // Dibuja un cuadrado, pero deja espacios entre ellos para simular los píxeles
+    for (let i = -tamano; i < tamano; i += 4) {
+      // 4 es el tamaño del "pixel"
+      for (let j = -tamano; j < tamano; j += 4) {
+        if (i * i + j * j <= tamano * tamano) {
+          // Esta es la ecuación de un círculo
+          pincel.fillRect(x + i, y + j, 3, 3) // Dibuja un cuadrado de 3x3
+        }
+      }
+    }
+  }
+
+  function disenharObjetivoPixeleado(x, y) {
+    disenharCuadradoPixel(x, y, radio + 19, '#cc00fe')
+    disenharCuadradoPixel(x, y, radio + 18, '#fc01bb')
+    disenharCuadradoPixel(x, y, radio + 15, '#8f00ff')
+    disenharCuadradoPixel(x, y, radio + 10, '#291be0')
+    disenharCuadradoPixel(x, y, radio + 5, '#00a3ff')
+    disenharCuadradoPixel(x, y, radio, '#00fffe')
+  }
+
+  function sortearPosicion(maximo) {
+    return Math.floor(Math.random() * maximo)
+  }
+
+  function actualizarPantalla() {
+    limpiarPantalla()
+    xAleatorio = sortearPosicion(600)
+    yAleatorio = sortearPosicion(400)
+    disenharObjetivoPixeleado(xAleatorio, yAleatorio) // Cambiado para usar la versión pixeleada
+  }
+
+  setInterval(actualizarPantalla, 300)
+
+  function disparar(evento) {
+    var x = event.pageX - pantalla.offsetLeft
+    var y = event.pageY - pantalla.offsetTop
+
+    if (
+      x < xAleatorio + radio &&
+      x > xAleatorio - radio &&
+      y < yAleatorio + radio &&
+      y > yAleatorio - radio
+    ) {
+      alert('Let is see how badly you want the WL, good luck.')
+      setInterval(actualizarPantalla, 0.00000001)
+    }
+  }
+
+  pantalla.onclick = disparar
+</script>
